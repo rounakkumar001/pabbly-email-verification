@@ -157,6 +157,7 @@ export default function Page() {
             placement="top"
             disableInteractive
           >
+            <span>
             <Button
               onClick={scrollToUpload}
               sx={{ mt: isMobile ? 2 : 0 }}
@@ -169,6 +170,7 @@ export default function Page() {
             >
               Upload File
             </Button>
+            </span>
           </Tooltip>
         </Box>
         <Box
@@ -228,6 +230,7 @@ export default function Page() {
                   placement="top"
                   disableInteractive
                 >
+                  <span>
                   <Button
                     onClick={scrollToUpload}
                     startIcon={
@@ -243,6 +246,7 @@ export default function Page() {
                   >
                     Upload File
                   </Button>
+                  </span>
                 </Tooltip>
               }
             />

@@ -47,6 +47,7 @@ export default function DashboardFolder({
         </Typography>
 
         <Tooltip title="Create a new folder." arrow placement="top">
+          <span>
           <Button
             sx={{
               mb: 0,
@@ -61,6 +62,7 @@ export default function DashboardFolder({
           >
             <Iconify icon="fa6-solid:plus" />
           </Button>
+          </span>
         </Tooltip>
       </Box>
 

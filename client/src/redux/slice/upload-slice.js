@@ -35,7 +35,7 @@ export const startEmailVerification = createAsyncThunk(
     async (jobId, { dispatch, rejectWithValue }) => {
         try {
             dispatch(startVerification());
-            const verificationResponse = await axios.get(`${endpoints.bouncify.startBulkEmailVerification}?job_id=${jobId}`); 
+            const verificationResponse = await axios.patch(`${endpoints.bouncify.startBulkEmailVerification}?job_id=${jobId}`);
             return verificationResponse.data;
         } catch (error) {
             return rejectWithValue(error.response?.data?.message || error.message || "An error occurred during verification.");

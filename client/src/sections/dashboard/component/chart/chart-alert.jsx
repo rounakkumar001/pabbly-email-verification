@@ -10,47 +10,49 @@ import { resetUpload, completeVerification, startEmailVerification } from 'src/r
 export default function ChartAlert() {
   const dispatch = useDispatch();
   const { jobId, isStartVerification, isVerificationCompleted } = useSelector((state) => state.fileUpload)
-
+  let timeoutId; 
 
   const handleStartVerification = () => {
     if (jobId) {
-      dispatch(startEmailVerification(jobId))
-      .then(() => { 
-        checkVerificationStatus();
-      })
-      .catch((error) => {
-        console.error("Error starting verification:", error);
-      })
+        dispatch(startEmailVerification(jobId))  // Dispatch the thunk
+            .unwrap() // Unwrap the promise from the Thunk
+            .then(() => {
+                checkVerificationStatus(); // Call checkVerificationStatus *after* successful dispatch
+            })
+            .catch((error) => {
+                console.error("Error starting verification:", error);
+                // Handle error, maybe show a message to the user
+                dispatch(completeVerification()); // Mark verification as complete even if there's an error
+            });
     } else {
-      alert("No job ID available. Please upload a file first.");
+        alert("No job ID available. Please upload a file first.");
     }
-  };
+};
 
-  const checkVerificationStatus = async () => {
+const checkVerificationStatus = async () => {
     try {
-      const response = await axiosInstance.get(`${endpoints.bouncify.checkBulkEmailVerificationStatus}?job_id=${jobId}`);
+        const response = await axiosInstance.get(
+            `${endpoints.bouncify.checkBulkEmailVerificationStatus}?job_id=${jobId}`
+        );
 
-      const { data: { data: { status } } } = response;
-      let timeoutId;
-      if (status === 'verifying' || status === 'ready') {
-        dispatch(fetchEmailVerificationResults());
-        timeoutId = setTimeout(() => checkVerificationStatus(jobId), 3000);
-      } else if (status === 'completed') {
-        dispatch(fetchEmailVerificationResults());
-        dispatch(resetUpload());
-        clearTimeout(timeoutId)
-      } else {
-        console.log("Verification finished with status:", status);
-        clearTimeout(timeoutId)
-      }
-      
+        const { data: { data: { status } } } = response;
+
+        if (status === 'verifying' || status === 'ready') {
+            dispatch(fetchEmailVerificationResults());
+            timeoutId = setTimeout(checkVerificationStatus, 3000); // Call itself after 3 seconds
+        } else if (status === 'completed') {
+            dispatch(fetchEmailVerificationResults());
+            dispatch(resetUpload());
+        } else {
+            console.log("Verification finished with status:", status);
+        }
     } catch (error) {
-      console.error("Error checking verification status:", error);
+        console.error("Error checking verification status:", error);
+    } finally {
+        clearTimeout(timeoutId); // Clear the timeout *in the finally block*
+        dispatch(completeVerification()); // Always mark as complete in finally
     }
-    finally {
-      dispatch(completeVerification())
-    }
-  };
+};
 
   return (
     <Box

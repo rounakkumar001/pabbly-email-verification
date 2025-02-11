@@ -41,6 +41,7 @@ export default function VerifySingleEmail({ onVerify, email, setEmail, isVerifyi
       </CardContent>
       <CardActions sx={{ px: 3, pb: 3, pt: 0 }}>
         <Tooltip title="Click to verify the email address.">
+          <span>
           <Button
             variant="contained"
             color="primary"
@@ -49,6 +50,7 @@ export default function VerifySingleEmail({ onVerify, email, setEmail, isVerifyi
           >
             {isVerifying ? 'Verifying...' : 'Verify'}
           </Button>
+          </span>
         </Tooltip>
       </CardActions>
     </Card>

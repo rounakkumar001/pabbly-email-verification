@@ -9,7 +9,7 @@ router.post('/bulk-upload', upload.single('csv_file'), EmailVerificationControll
 
 router.get('/bulk/status', EmailVerificationController.checkJobStatus);
 
-router.get('/bulk/start', EmailVerificationController.startEmailVerification);
+router.patch('/bulk/start', EmailVerificationController.startEmailVerification);
 
 router.post('/bulk/download', EmailVerificationController.downloadBulkResults);
 

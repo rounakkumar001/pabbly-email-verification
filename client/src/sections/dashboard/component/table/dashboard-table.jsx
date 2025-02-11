@@ -332,7 +332,7 @@ export function DashboardTable() {
               )
               .map((row, index) => (
                 <DashboardTableRow
-                  key={row._id}
+                  key={index}
                   row={row}
                   selected={table.selected.includes(row._id)}
                   onSelectRow={() => table.onSelectRow(row._id)}

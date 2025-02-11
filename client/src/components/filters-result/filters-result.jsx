@@ -24,7 +24,7 @@ export function FiltersResult({ totalResults, onReset, sx, children }) {
       <Box flexGrow={1} gap={1} display="flex" flexWrap="wrap" alignItems="center">
         {children}
         <Tooltip title="Clear the statuses." arrow placement="top">
-
+        <span>
         <Button
           color="error"
           onClick={onReset}
@@ -32,6 +32,7 @@ export function FiltersResult({ totalResults, onReset, sx, children }) {
         >
           Clear
         </Button>
+        </span>
         </Tooltip>
 
       </Box>
