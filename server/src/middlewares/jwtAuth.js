@@ -38,7 +38,7 @@ module.exports = async (req, res, next) => {
                 });
 
                 // Save the logs to the database
-                await newActivityLogs.save();
+                await newActivityLog.save();
             }
             
             req.user = user;
