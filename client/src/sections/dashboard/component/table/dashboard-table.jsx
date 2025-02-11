@@ -23,7 +23,7 @@ import {
 import { useBoolean } from 'src/hooks/use-boolean';
 import { useSetState } from 'src/hooks/use-set-state';
 
-import { fIsBetween } from 'src/utils/format-time';
+// import { fIsBetween } from 'src/utils/format-time';
 
 import { varAlpha } from 'src/theme/styles';
 import { DASHBOARD_STATUS_OPTIONS } from 'src/_mock/_table/_dashboard';
@@ -233,8 +233,6 @@ export function DashboardTable() {
     handleClosePopover();
   };
 
-
-
   return (
     <Card>
       <CardHeader
@@ -364,7 +362,6 @@ export function DashboardTable() {
             )}
           </TableBody>
         </Table>
-        {/* </Scrollbar> */}
       </Box>
       <CustomPopover
         open={Boolean(anchorEl)}
@@ -435,8 +432,8 @@ export function DashboardTable() {
   );
 }
 
-function applyFilter({ inputData, comparator, filters, dateError }) {
-  const { status, name, startDate, endDate } = filters;
+function applyFilter({ inputData, comparator, filters }) {
+  const { status, name } = filters;
 
   const stabilizedThis = inputData.map((el, index) => [el, index]);
 
@@ -451,19 +448,14 @@ function applyFilter({ inputData, comparator, filters, dateError }) {
   if (name) {
     inputData = inputData.filter(
       (order) =>
-        order.name.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
-        (order.email && order.email.toLowerCase().indexOf(name.toLowerCase()) !== -1) // Ensure email exists
+        order.name.toLowerCase().indexOf(name.toLowerCase()) !== -1
     );
   }
 
-  if (status !== 'all') {
+  if (status === 'completed') {
+    inputData = inputData.filter((order) => order.status === 'VERIFIED_LIST');
+  } else if (status !== 'all') {
     inputData = inputData.filter((order) => order.status === status);
-  }
-
-  if (!dateError) {
-    if (startDate && endDate) {
-      inputData = inputData.filter((order) => fIsBetween(order.createdAt, startDate, endDate));
-    }
   }
 
   return inputData;
