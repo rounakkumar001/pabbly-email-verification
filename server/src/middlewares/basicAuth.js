@@ -2,10 +2,10 @@
  * Basic Authentication Middleware
  */
 
-const Response = require('../utils/Response');
+const Response = require('../utils/response');
 const { ActivityLog} = require('../models');
 const passport = require('passport');
-const Logs = require('../utils/Logs');
+const Logs = require('../utils/logs');
 
 module.exports = async (req, res, next) => {
 

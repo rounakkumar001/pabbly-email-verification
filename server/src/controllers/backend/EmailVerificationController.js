@@ -1,12 +1,9 @@
-const Logs = require('../../utils/Logs');
-const Response = require('../../utils/Response');
-const { validationResult, param, body } = require('express-validator');
-const axios = require('axios');
+const Logs = require('../../utils/logs');
+const Response = require('../../utils/response');
+const { validationResult, body } = require('express-validator');
 const FormData = require('form-data');
-
 const { Readable } = require('stream');
 const { CreditHistory, EmailVerificationLog } = require('../../models');
-const { log } = require('console');
 const BouncifyService = require('../../services/bouncify-service')
 
 const bouncifyService = new BouncifyService(process.env.BOUNCIFY_API_KEY);
@@ -66,7 +63,7 @@ module.exports = {
                     no_of_credits: 1,
                 });
 
-                const response = await logEntry.save();
+                await logEntry.save();
 
                 // 4. Return success response with the log entry
                 return res.json(Response.success("Email verification result", logEntry));
@@ -306,8 +303,6 @@ module.exports = {
                 filterResult = ['deliverable', 'undeliverable', 'accept_all', 'unknown'];
         }
 
-        const url = `https://api.bouncify.io/v1/download?jobId=${jobId}&apikey=${apiKey}`;
-
         try {
             // const response = await axios.post(url, { filterResult }, { responseType: 'stream' });
             const response = await bouncifyService.downloadBulkResults(jobId, filterResult);
@@ -358,14 +353,12 @@ module.exports = {
      * @param {Object} req.user - Information about the authenticated user. This property is expected to be populated by authentication middleware. It should contain a property `id` (e.g., `req.user.id`) representing the user's ID.
      */
     getBouncifyCredits: async (req, res) => {
-        if (!req.user || !req.user.id) {
-            Logs.error("User information is missing in the request.");
-            return res.status(401).json(Response.error("Unauthorized. User information is missing."));
-        }
 
         try {
-            // 1. Get credit info from Bouncify
-            const response = await axios.get(`https://api.bouncify.io/v1/info?apikey=${process.env.BOUNCIFY_API_KEY}`);
+            if (!req.user || !req.user.id) {
+                Logs.error("User information is missing in the request.");
+                return res.status(401).json(Response.error("Unauthorized. User information is missing."));
+            }
 
             // const { credits_remaining } = response.data.credits_info;
             const { credits_remaining } = await bouncifyService.getCreditsInfo();
@@ -384,6 +377,7 @@ module.exports = {
                     user_id: req.user.id,
                     credits_remaining: credits_remaining,
                 });
+
                 await userCreditHistory.save();
             } else {
                 userCreditHistory = await CreditHistory.findOneAndUpdate(
