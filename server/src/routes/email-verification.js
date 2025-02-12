@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const EmailVerificationController = require('../controllers/backend/EmailVerificationController');
+const EmailVerificationController = require('../controllers/EmailVerificationController');
 const upload = require('../middlewares/multer');
 
 router.post('/single', EmailVerificationController.verifySingleEmail);

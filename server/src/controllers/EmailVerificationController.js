@@ -1,10 +1,10 @@
-const Logs = require('../../utils/logs');
-const Response = require('../../utils/response');
+const Logs = require('../utils/logs');
+const Response = require('../utils/response');
 const { validationResult, body } = require('express-validator');
 const FormData = require('form-data');
 const { Readable } = require('stream');
-const { CreditHistory, EmailVerificationLog } = require('../../models');
-const BouncifyService = require('../../services/bouncify-service')
+const { CreditHistory, EmailVerificationLog } = require('../models');
+const BouncifyService = require('../services/bouncify-service')
 
 const bouncifyService = new BouncifyService(process.env.BOUNCIFY_API_KEY);
 
