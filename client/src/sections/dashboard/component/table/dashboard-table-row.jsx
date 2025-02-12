@@ -24,10 +24,6 @@ export function DashboardTableRow({
   selected,
   dashboardTableIndex,
   onOpenPopover,
-  onViewReport,
-  onStartVerification,
-  isProcessing,
-  isCompleted,
 }) {
   const csvfilesname = [{ name: row.name, numberOfEmails: row.numberOfEmails }];
   const timezone = '(UTC+05:30) Asia/Kolkata';

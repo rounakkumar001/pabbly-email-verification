@@ -10,7 +10,6 @@ import { resetUpload, completeVerification, startEmailVerification } from 'src/r
 export default function ChartAlert() {
   const dispatch = useDispatch();
   const { jobId, isStartVerification, isVerificationCompleted } = useSelector((state) => state.fileUpload)
-  let timeoutId; 
 
   const handleStartVerification = () => {
     if (jobId) {
@@ -30,29 +29,28 @@ export default function ChartAlert() {
 };
 
 const checkVerificationStatus = async () => {
-    try {
-        const response = await axiosInstance.get(
-            `${endpoints.bouncify.checkBulkEmailVerificationStatus}?job_id=${jobId}`
-        );
+  try {
+    const response = await axiosInstance.get(`${endpoints.bouncify.checkBulkEmailVerificationStatus}?job_id=${jobId}`);
+    dispatch(fetchEmailVerificationResults());
+    const { data: { data: { status } } } = response;
 
-        const { data: { data: { status } } } = response;
-
-        if (status === 'verifying' || status === 'ready') {
-            dispatch(fetchEmailVerificationResults());
-            timeoutId = setTimeout(checkVerificationStatus, 3000); // Call itself after 3 seconds
-        } else if (status === 'completed') {
-            dispatch(fetchEmailVerificationResults());
-            dispatch(resetUpload());
-        } else {
-            console.log("Verification finished with status:", status);
-        }
-    } catch (error) {
-        console.error("Error checking verification status:", error);
-    } finally {
-        clearTimeout(timeoutId); // Clear the timeout *in the finally block*
-        dispatch(completeVerification()); // Always mark as complete in finally
+    let timeoutId;
+    if (status === 'verifying' || status === 'ready') {
+      
+      timeoutId = setTimeout(() => checkVerificationStatus(jobId), 3000); // Call itself again after 3 seconds
+    } else if (status === 'completed') {
+      clearTimeout(timeoutId);
+      dispatch(fetchEmailVerificationResults());
+      dispatch(completeVerification())
+    } else {
+      console.log("Verification finished with status:", status); // Log other statuses
     }
+
+  } catch (error) {
+    console.error("Error checking verification status:", error);
+  }
 };
+
 
   return (
     <Box

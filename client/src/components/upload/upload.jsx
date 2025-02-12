@@ -20,7 +20,7 @@ const FileUpload = forwardRef(
       error,
       disabled,
       sx,
-      onFileUpload,
+      onFileUpload = () => {},
       selectedFile,
       uploadInformation,
       allowedFileTypes,
