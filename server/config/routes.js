@@ -1,8 +1,7 @@
 const fs = require('fs');
 const path = require('path');
-const sessionAuth = require('../src/middlewares/sessionAuth');
-const basicAuth = require('../src/middlewares/basicAuth');
-const jwtAuth = require('../src/middlewares/jwtAuth');
+const sessionAuth = require('../src/middlewares/session-auth');
+const basicAuth = require('../src/middlewares/basic-auth');
 
 const csrf = require('csurf');
 // CSRF protection middleware

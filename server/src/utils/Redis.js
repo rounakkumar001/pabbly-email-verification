@@ -1,4 +1,4 @@
-const redisClient = require('../../config/redisClient');
+const redisClient = require('../../config/redis-client');
 const Logs = require('./Logs');
 
 module.exports = {

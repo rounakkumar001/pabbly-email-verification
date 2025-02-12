@@ -153,26 +153,27 @@ module.exports = {
      * @param {Object} res - The Express.js response object. This object is used to send the response back to the client.
      */
     uploadBulkEmail: async (req, res) => {
-        const { id } = req.user; // User ID, if needed for logging or tracking
-        const uniqueKey = Date.now(); // Add a timestamp to the filename for uniqueness
-
-        if (!req.file) {
-            return res.status(400).json(Response.error("No file uploaded. Please upload a CSV file.")); // More specific message
-        }
-
-        const autoVerify = req.body.auto_verify !== undefined ? req.body.auto_verify : true; // Allow override
-
-        const fileStream = new Readable({
-            read() {
-                this.push(req.file.buffer); // Push the file buffer to the stream
-                this.push(null); // Signal the end of the stream
-            },
-        });
-
-        const formData = new FormData();
-        formData.append('local_file', fileStream, `${req.file.originalname}-${uniqueKey}`); // Append the file stream to the form data
 
         try {
+            const uniqueKey = Date.now(); // Add a timestamp to the filename for uniqueness
+
+            if (!req.file) {
+                return res.status(400).json(Response.error("No file uploaded. Please upload a CSV file.")); // More specific message
+            }
+
+            const autoVerify = req.body.auto_verify !== undefined ? req.body.auto_verify : true; // Allow override
+
+            const fileStream = new Readable({
+                read() {
+                    this.push(req.file.buffer); // Push the file buffer to the stream
+                    this.push(null); // Signal the end of the stream
+                },
+            });
+
+            const formData = new FormData();
+            formData.append('local_file', fileStream, `${req.file.originalname}-${uniqueKey}`); // Append the file stream to the form data
+
+
             // Use the BouncifyService to upload the bulk email
             const bouncifyResponse = await bouncifyService.uploadBulkEmail(req.file.buffer, `${req.file.originalname}-${uniqueKey}`, autoVerify);
 
@@ -279,31 +280,34 @@ module.exports = {
      * @param {Object} res - The Express.js response object. This object is used to send the file stream back to the client.
      */
     downloadBulkResults: async (req, res) => {
-        const { jobId, selectedOption } = req.body;
-        const apiKey = process.env.BOUNCIFY_API_KEY;
-
-        // Input Validation
-        if (!jobId || typeof jobId !== 'string' || !jobId.trim()) {
-            return res.status(400).json(Response.error('Invalid jobId', 'jobId is required.'));
-        }
-        if (!apiKey || typeof apiKey !== 'string' || !apiKey.trim()) {
-            return res.status(400).json(Response.error('Invalid apiKey', 'apiKey is required.'));
-        }
-
-        let filterResult = [];
-
-        switch (selectedOption) {
-            case 'deliverable':
-                filterResult = ['deliverable'];
-                break;
-            case 'undeliverable':
-                filterResult = ['undeliverable'];
-                break;
-            default: // Default case: all results
-                filterResult = ['deliverable', 'undeliverable', 'accept_all', 'unknown'];
-        }
 
         try {
+
+            const { jobId, selectedOption } = req.body;
+            const apiKey = process.env.BOUNCIFY_API_KEY;
+
+            // Input Validation
+            if (!jobId || typeof jobId !== 'string' || !jobId.trim()) {
+                return res.status(400).json(Response.error('Invalid jobId', 'jobId is required.'));
+            }
+            if (!apiKey || typeof apiKey !== 'string' || !apiKey.trim()) {
+                return res.status(400).json(Response.error('Invalid apiKey', 'apiKey is required.'));
+            }
+
+            let filterResult = [];
+
+            switch (selectedOption) {
+                case 'deliverable':
+                    filterResult = ['deliverable'];
+                    break;
+                case 'undeliverable':
+                    filterResult = ['undeliverable'];
+                    break;
+                default: // Default case: all results
+                    filterResult = ['deliverable', 'undeliverable', 'accept_all', 'unknown'];
+            }
+
+
             // const response = await axios.post(url, { filterResult }, { responseType: 'stream' });
             const response = await bouncifyService.downloadBulkResults(jobId, filterResult);
 
@@ -430,15 +434,15 @@ module.exports = {
      * @param {string} req.query.job_id - The query parameters.  Specifically, the job ID is expected to be present as `req.query.job_id`.
      */
     startEmailVerification: async (req, res) => {
-        const jobId = req.query.job_id;
-
-        if (!jobId || typeof jobId !== 'string' || !jobId.trim()) {
-            return res.status(400).json(Response.error("Invalid jobId", "jobId is required."));
-        }
-
-        const data = { "action": "start" };
 
         try {
+
+            const jobId = req.query.job_id;
+
+            if (!jobId || typeof jobId !== 'string' || !jobId.trim()) {
+                return res.status(400).json(Response.error("Invalid jobId", "jobId is required."));
+            }
+
             // 1. Start email verification via Bouncify API using the service
             const response = await bouncifyService.startEmailVerification(jobId);
 
@@ -504,13 +508,14 @@ module.exports = {
     * @param {Object} res - The Express.js response object. This object is used to send the response back to the client.
     */
     deleteEmailList: async (req, res) => {
-        const jobId = req.query.job_id;
-
-        if (!jobId || typeof jobId !== 'string' || !jobId.trim()) {
-            return res.status(400).json(Response.error("Invalid jobId", "jobId is required."));
-        }
 
         try {
+            const jobId = req.query.job_id;
+
+            if (!jobId || typeof jobId !== 'string' || !jobId.trim()) {
+                return res.status(400).json(Response.error("Invalid jobId", "jobId is required."));
+            }
+
             // 1. Delete the email list via Bouncify API using the service
             await bouncifyService.deleteEmailList(jobId);
 
