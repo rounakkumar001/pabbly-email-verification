@@ -22,7 +22,7 @@ import axiosInstance, { endpoints } from 'src/utils/axios';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 import { listItems } from 'src/_mock/big-card/_reportsBigCardListItems';
-import { fetchEmailVerificationResults } from 'src/redux/slice/emailVerificationSlice';
+import { fetchEmailVerificationResults } from 'src/redux/slice/email-verification-slice';
 
 import { Iconify } from 'src/components/iconify';
 import BigCard from 'src/components/big-card/big-card';

@@ -12,7 +12,7 @@ import { useSetState } from 'src/hooks/use-set-state';
 
 import { fIsBetween } from 'src/utils/format-time';
 
-import { fetchEmailVerificationResults } from 'src/redux/slice/emailVerificationSlice';
+import { fetchEmailVerificationResults } from 'src/redux/slice/email-verification-slice';
 
 import { Scrollbar } from 'src/components/scrollbar';
 import {

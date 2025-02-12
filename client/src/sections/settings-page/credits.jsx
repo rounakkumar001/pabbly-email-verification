@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { Box, useMediaQuery } from '@mui/material';
 
-import { fetchUserCredits } from 'src/redux/slice/userSlice';
+import { fetchUserCredits } from 'src/redux/slice/user-slice';
 
 import StatsCards from 'src/components/stats-card/stats-card';
 

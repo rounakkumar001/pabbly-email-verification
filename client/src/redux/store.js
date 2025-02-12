@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-import userReducer from './slice/userSlice';
+import userReducer from './slice/user-slice';
 import fileUploadReducer from './slice/upload-slice';
-import emailVerificationReducer from './slice/emailVerificationSlice';
+import emailVerificationReducer from './slice/email-verification-slice';
 
 export const store = configureStore({
   reducer: {

@@ -5,7 +5,7 @@ import { useSetState } from 'src/hooks/use-set-state';
 
 import axios, { endpoints } from 'src/utils/axios';
 
-import { fetchUserSession } from 'src/redux/slice/userSlice';
+import { fetchUserSession } from 'src/redux/slice/user-slice';
 
 import { STORAGE_KEY } from './constant';
 import { AuthContext } from '../auth-context';

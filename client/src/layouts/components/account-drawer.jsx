@@ -13,7 +13,7 @@ import { paths } from 'src/routes/paths';
 import { useRouter, usePathname } from 'src/routes/hooks';
 
 import { varAlpha } from 'src/theme/styles';
-import { logout } from 'src/redux/slice/userSlice';
+import { logout } from 'src/redux/slice/user-slice';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';

@@ -10,7 +10,7 @@ import Dialog, { dialogClasses } from '@mui/material/Dialog';
 import { Divider, Tooltip, TextField, Typography, DialogTitle } from '@mui/material';
 
 import { varAlpha } from 'src/theme/styles';
-import { setSelectedListName } from 'src/redux/slice/emailVerificationSlice';
+import { setSelectedListName } from 'src/redux/slice/email-verification-slice';
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';

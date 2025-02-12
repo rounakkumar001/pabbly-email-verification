@@ -27,7 +27,7 @@ import { useSetState } from 'src/hooks/use-set-state';
 
 import { varAlpha } from 'src/theme/styles';
 import { DASHBOARD_STATUS_OPTIONS } from 'src/_mock/_table/_dashboard';
-import { deleteBulkEmailList, fetchEmailVerificationResults } from 'src/redux/slice/emailVerificationSlice';
+import { deleteBulkEmailList, fetchEmailVerificationResults } from 'src/redux/slice/email-verification-slice';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';

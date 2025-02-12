@@ -9,8 +9,8 @@ import { Box, Tooltip, IconButton, Typography } from '@mui/material';
 
 import axiosInstance, { endpoints } from 'src/utils/axios';
 
-import { startEmailVerification } from 'src/redux/slice/upload-slice';
-import { setSelectedListName, fetchEmailVerificationResults } from 'src/redux/slice/emailVerificationSlice';
+import { completeVerification, startEmailVerification } from 'src/redux/slice/upload-slice';
+import { setSelectedListName, fetchEmailVerificationResults } from 'src/redux/slice/email-verification-slice';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
@@ -59,6 +59,7 @@ export function DashboardTableRow({
       } else if (status === 'completed') {
         clearTimeout(timeoutId);
         dispatch(fetchEmailVerificationResults());
+        dispatch(completeVerification())
       } else {
         console.log("Verification finished with status:", status); // Log other statuses
       }
@@ -76,8 +77,7 @@ export function DashboardTableRow({
       .catch((error) => {
         console.error("Upload failed:", error);
       });
-    checkVerificationStatus(row.jobId);
-
+    checkVerificationStatus(row.jobId)
   };
 
 
@@ -150,156 +150,156 @@ export function DashboardTableRow({
 
 
   const renderPrimary = (
-      <TableRow hover selected={selected}>
-        <TableCell width={300}>
-          <Stack
-            spacing={2}
-            direction="row"
-            alignItems="center"
-            sx={{
-              typography: 'body2',
-              flex: '1 1 auto',
-              alignItems: 'flex-start',
-            }}
+    <TableRow hover selected={selected}>
+      <TableCell width={300}>
+        <Stack
+          spacing={2}
+          direction="row"
+          alignItems="center"
+          sx={{
+            typography: 'body2',
+            flex: '1 1 auto',
+            alignItems: 'flex-start',
+          }}
+        >
+          <Tooltip
+            title={`${(row.status === 'UNPROCESSED' && 'List is Unprocessed.') ||
+              (row.status === 'VERIFIED_LIST' && 'List is Completed.') ||
+              (row.status === 'PROCESSING' && 'List is Processing.')
+              }`}
+            arrow
+            placement="top"
+            disableInteractive
           >
-            <Tooltip
-              title={`${(row.status === 'UNPROCESSED' && 'List is Unprocessed.') ||
-                (row.status === 'VERIFIED_LIST' && 'List is Completed.') ||
-                (row.status === 'PROCESSING' && 'List is Processing.')
-                }`}
-              arrow
-              placement="top"
-              disableInteractive
-            >
-              <Label
-                variant="soft"
-                color={
-                  (row.status === 'UNPROCESSED' && 'error') ||
-                  (row.status === 'VERIFIED_LIST' && 'success') ||
-                  (row.status === 'PROCESSING' && 'info') ||
-                  'default'
-                }
-              >
-                {row.status === "VERIFIED_LIST" ? "Completed" : row.status === "UNPROCESSED" ? "Unprocessed" : row.status === "PROCESSING" ? "Processing" : row.status}
-              </Label>
-            </Tooltip>
-          </Stack>
-          <Stack spacing={2} direction="row" alignItems="center">
-            <Tooltip
-              title={
-                <>
-                  List Name: {currentFile.name} ({currentFile.numberOfEmails})
-                </>
+            <Label
+              variant="soft"
+              color={
+                (row.status === 'UNPROCESSED' && 'error') ||
+                (row.status === 'VERIFIED_LIST' && 'success') ||
+                (row.status === 'PROCESSING' && 'info') ||
+                'default'
               }
-              arrow
-              placement="top"
-              disableInteractive
             >
-              <Typography
-                component="span"
-                fontSize={14}
-                sx={{
-                  mt: '4px',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                  maxWidth: '300px',
-                }}
-              >
-                {currentFile.name} ({currentFile.numberOfEmails}){/* {commonIcon} */}
-              </Typography>
-            </Tooltip>
-          </Stack>
-          <Stack spacing={2} direction="row" alignItems="center">
-            <Tooltip
-              arrow
-              placement="top"
-              disableInteractive
-              title={`List Uploaded: ${row.date}, ${timezone}`}
-            >
-              <Box
-                component="span"
-                sx={{
-                  color: 'text.secondary',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                  maxWidth: '300px',
-                  display: 'inline-block',
-                }}
-              >
-                {row.date}
-              </Box>
-            </Tooltip>
-          </Stack>
-        </TableCell>
-
-        <TableCell width={200}>
+              {row.status === "VERIFIED_LIST" ? "Completed" : row.status === "UNPROCESSED" ? "Unprocessed" : row.status === "PROCESSING" ? "Processing" : row.status}
+            </Label>
+          </Tooltip>
+        </Stack>
+        <Stack spacing={2} direction="row" alignItems="center">
           <Tooltip
             title={
-              row.status === 'PROCESSING'
-                ? 'Verification in progress. Please wait.'
-                : row.status === 'VERIFIED_LIST'
-                  ? 'Click to download list'
-                  : 'Click to start verification on list'
+              <>
+                List Name: {currentFile.name} ({currentFile.numberOfEmails})
+              </>
             }
             arrow
             placement="top"
             disableInteractive
           >
-            <span>
-              <Button
-                variant="outlined"
-                color="primary"
-                disabled={row.status === 'PROCESSING'}
-                onClick={
-                  row.status === 'PROCESSING' || row.status === 'VERIFIED_LIST'
-                    ? handleDownload
-                    : handleStartVerification
-                }
-              >
-                  {
-                    row.status === 'PROCESSING' ? 'Verification In Progress' : row.status === 'VERIFIED_LIST' ? 'Download' : 'Start Verification'
-                  }
-              </Button>
-            </span>
+            <Typography
+              component="span"
+              fontSize={14}
+              sx={{
+                mt: '4px',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                maxWidth: '300px',
+              }}
+            >
+              {currentFile.name} ({currentFile.numberOfEmails}){/* {commonIcon} */}
+            </Typography>
           </Tooltip>
-        </TableCell>
-
-        <TableCell width={140} align="right">
+        </Stack>
+        <Stack spacing={2} direction="row" alignItems="center">
           <Tooltip
-            title={
-              row.status === 'VERIFIED_LIST'
-                ? 'Click to view report of list.'
-                : 'Verification in progress. Please wait.'
-            }
             arrow
             placement="top"
             disableInteractive
+            title={`List Uploaded: ${row.date}, ${timezone}`}
           >
-            <span>
-              <Button
-                variant="outlined"
-                color="success"
-                disabled={row.status === 'UNPROCESSED' || row.status === 'PROCESSING'}
-                onClick={handleViewReport}
-              >
-                View Report
-              </Button>
-            </span>
-          </Tooltip>
-        </TableCell>
-        <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
-          <Tooltip title="Click for more options." arrow placement="top">
-            <IconButton
-              color={popover.open ? 'inherit' : 'default'}
-              onClick={(event) => onOpenPopover(event)}
+            <Box
+              component="span"
+              sx={{
+                color: 'text.secondary',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                maxWidth: '300px',
+                display: 'inline-block',
+              }}
             >
-              <Iconify icon="eva:more-vertical-fill" />
-            </IconButton>
+              {row.date}
+            </Box>
           </Tooltip>
-        </TableCell>
-      </TableRow>
+        </Stack>
+      </TableCell>
+
+      <TableCell width={200}>
+        <Tooltip
+          title={
+            row.status === 'PROCESSING'
+              ? 'Verification in progress. Please wait.'
+              : row.status === 'VERIFIED_LIST'
+                ? 'Click to download list'
+                : 'Click to start verification on list'
+          }
+          arrow
+          placement="top"
+          disableInteractive
+        >
+          <span>
+            <Button
+              variant="outlined"
+              color="primary"
+              disabled={row.status === 'PROCESSING'}
+              onClick={
+                row.status === 'PROCESSING' || row.status === 'VERIFIED_LIST'
+                  ? handleDownload
+                  : handleStartVerification
+              }
+            >
+              {
+                row.status === 'PROCESSING' ? 'Verification In Progress' : row.status === 'VERIFIED_LIST' ? 'Download' : 'Start Verification'
+              }
+            </Button>
+          </span>
+        </Tooltip>
+      </TableCell>
+
+      <TableCell width={140} align="right">
+        <Tooltip
+          title={
+            row.status === 'VERIFIED_LIST'
+              ? 'Click to view report of list.'
+              : 'Verification in progress. Please wait.'
+          }
+          arrow
+          placement="top"
+          disableInteractive
+        >
+          <span>
+            <Button
+              variant="outlined"
+              color="success"
+              disabled={row.status === 'UNPROCESSED' || row.status === 'PROCESSING'}
+              onClick={handleViewReport}
+            >
+              View Report
+            </Button>
+          </span>
+        </Tooltip>
+      </TableCell>
+      <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
+        <Tooltip title="Click for more options." arrow placement="top">
+          <IconButton
+            color={popover.open ? 'inherit' : 'default'}
+            onClick={(event) => onOpenPopover(event)}
+          >
+            <Iconify icon="eva:more-vertical-fill" />
+          </IconButton>
+        </Tooltip>
+      </TableCell>
+    </TableRow>
   );
 
   return <>{renderPrimary}</>;

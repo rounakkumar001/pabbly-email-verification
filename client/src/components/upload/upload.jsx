@@ -5,7 +5,7 @@ import { Box, Tooltip, IconButton, Typography } from '@mui/material';
 
 import { varAlpha } from 'src/theme/styles';
 import { uploadBulkEmail } from 'src/redux/slice/upload-slice';
-import { fetchEmailVerificationResults } from 'src/redux/slice/emailVerificationSlice';
+import { fetchEmailVerificationResults } from 'src/redux/slice/email-verification-slice';
 
 import { Iconify } from '../iconify';
 

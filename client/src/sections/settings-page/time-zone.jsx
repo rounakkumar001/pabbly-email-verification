@@ -22,7 +22,7 @@ import {
 
 import { CONFIG } from 'src/config-global';
 import { timezones } from 'src/assets/data/timezone'; // Ensure this matches your timezone data structure
-import { updateUserTimezone } from 'src/redux/slice/userSlice';
+import { updateUserTimezone } from 'src/redux/slice/user-slice';
 
 import { Iconify } from 'src/components/iconify';
 

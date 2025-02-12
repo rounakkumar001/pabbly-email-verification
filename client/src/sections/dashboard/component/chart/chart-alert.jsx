@@ -4,7 +4,7 @@ import { Box, Alert, Button, Typography } from '@mui/material';
 
 import axiosInstance, { endpoints } from 'src/utils/axios';
 
-import { fetchEmailVerificationResults } from 'src/redux/slice/emailVerificationSlice';
+import { fetchEmailVerificationResults } from 'src/redux/slice/email-verification-slice';
 import { resetUpload, completeVerification, startEmailVerification } from 'src/redux/slice/upload-slice';
 
 export default function ChartAlert() {

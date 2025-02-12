@@ -6,9 +6,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Box, Alert, Button, Tooltip, Snackbar, Skeleton, useMediaQuery } from '@mui/material';
 
 import { DashboardContent } from 'src/layouts/dashboard';
-import { fetchUserCredits } from 'src/redux/slice/userSlice';
+import { fetchUserCredits } from 'src/redux/slice/user-slice';
 import { listItems } from 'src/_mock/big-card/_dashboardBigCardListItems';
-import { singleEmailVerificationResults } from 'src/redux/slice/emailVerificationSlice';
+import { singleEmailVerificationResults } from 'src/redux/slice/email-verification-slice';
 
 import { Iconify } from 'src/components/iconify';
 import BigCard from 'src/components/big-card/big-card';
